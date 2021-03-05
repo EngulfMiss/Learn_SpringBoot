@@ -2,7 +2,7 @@
 学习springboot
 
 ## springboot web项目的pox.xml配置
-'''
+```
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -25,7 +25,7 @@
         </plugin>
     </plugins>
 </build>
-'''
+```
 
 ## springboot的配置文件名称
 application.properties
