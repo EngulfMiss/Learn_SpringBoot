@@ -36,4 +36,6 @@ application.properties
 
 ## SpringBoot引用thymeleaf 
 要运行和代码提示，在html页面上加上
+```
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+```
