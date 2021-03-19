@@ -1,0 +1,33 @@
+person:
+  userName: "QSJ \n QSB"
+# 单引号 控制台输出 QSJ \n QSB     双引号会将\n作为换行输出
+# 双引号不会转义,单引号会转义
+  boss: false
+  birth: 2021/2/6
+  age: 23
+#  interests: [纳尔,千珏,妮蔻]
+  interests:
+    - 纳尔
+    - 千珏
+    - 妮蔻
+  animal: [猫,狗]
+#  score: {Chinese: 0,English: 60,Math: 80}
+  score:
+    Chinese: 0
+    English: 60
+    Math: 80
+  salarys:
+    - 1234.5
+    - 2346.5
+    - 2233.5
+  pet:
+    name: Gnar
+    weight: 35
+  allPets:
+    like:
+      - {name: gnar,weight: 35}
+      - name: kindred
+        weight: 45
+      - name: neeko
+        weight: 40
+    common: [{name: lulu,weight: 30},{name: unknow,weight: 0}]

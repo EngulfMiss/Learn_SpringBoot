@@ -1,0 +1,62 @@
+{
+  "groups": [
+    {
+      "name": "person",
+      "type": "com.engulf.boot.domain.Person",
+      "sourceType": "com.engulf.boot.domain.Person"
+    }
+  ],
+  "properties": [
+    {
+      "name": "person.age",
+      "type": "java.lang.Integer",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.all-pets",
+      "type": "java.util.Map<java.lang.String,java.util.List<com.engulf.boot.domain.Pet>>",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.animal",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.birth",
+      "type": "java.util.Date",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.boss",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.interests",
+      "type": "java.lang.String[]",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.pet",
+      "type": "com.engulf.boot.domain.Pet",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.salarys",
+      "type": "java.util.Set<java.lang.Double>",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.score",
+      "type": "java.util.Map<java.lang.String,java.lang.Object>",
+      "sourceType": "com.engulf.boot.domain.Person"
+    },
+    {
+      "name": "person.user-name",
+      "type": "java.lang.String",
+      "sourceType": "com.engulf.boot.domain.Person"
+    }
+  ],
+  "hints": []
+}
