@@ -1,0 +1,86 @@
+1.静态资源访问
+    1.1 静态资源目录
+    类路径下: called /static or /public or /resources or /META-INF/resources
+    访问方式: 当前项目根路径/  + 静态资源名称
+
+    原理: 静态资源映射的是/**
+    请求进来，先去找Controller看能不能处理.不能处理的所有请求再交给静态资源处理器,静态资源就会
+    到上述静态目录中查找资源，还没有就是404
+
+    改变默认的静态资源路径
+      # 改变静态资源文件夹位置
+      web:
+        resources:
+          static-locations: [classpath:/gnar/]
+
+
+
+    2.2 静态资源访问前缀
+    默认是没有前缀的，可以在yaml中配置static-path-pattern
+    # 配置静态资源访问前缀
+    spring:
+      mvc:
+        static-path-pattern: /res/**
+    当前项目 + static-path-pattern + 静态资源名 = 静态资源目录下找
+
+
+    2.3 webjars
+    自动映射
+    https://www.webjars.org/
+    jquery bootstrap 等静态资源依赖导入
+    访问路径： 项目根路径/ + webjars/ + (查看对应jar包的静态资源目录名称)
+    例如:http://localhost:8080/webjars/jquery/3.5.1/jquery.min.js
+
+
+2. 欢迎页支持
+    静态资源路径下 index.html
+        - 可以配置静态资源路径
+        - 但不可以修改静态资源访问前缀，否则将导致index.html不能被默认访问
+
+
+3.请求参数处理
+    1.请求映射
+        Rest风格支持 同一请求路径 不同请求方式决定不同方法
+        核心Filter: HiddenHttpMethodFilter
+        要在springboot的配置文件中手动开启
+        spring.mvc.hiddenmethod.filter 设置为 true
+
+    REST原理(表单提交使用REST的时候)
+        - 表单请求会被HiddenHttpMethodFilter拦截
+        - 请求是否正确，并且是POST请求
+            - 获取_method的值
+            - 兼容以下请求方式
+                PUT DELETE PATCH
+            - 原生request(post),包装模式requestWrapper重写了getMethod方法，返回的是传入的值
+            - 过滤器链放行的时候用wrapper。以后的方法调用getMethod是调用requesWrapper
+
+
+    2.参数处理原理
+        - HandlerMapping中找到能处理请求的Handler(Controller.method())
+        - 为当前Handler找一个适配器HandlerAdapter，RequestMappingHandlerAdapter
+        - 执行目标方法(DispatcherServlet  --> doDispatch)
+            mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+
+
+
+
+内容协商：
+    根据客户端接收能力不同，返回不同媒体类型的数据
+
+    内容协商原理：
+        1.判断当前响应头中是否已经有确定的媒体类型，MediaType
+        2.获取客户端支持的返回数据类型 (获取客户端Accepte请求字段)
+        3.遍历循环当前系统的所有MessageConverter，看谁支持操作这个对象(Champion)
+        4.找到支持操作Champion的converter，把converter支持的媒体类型统计出来
+        5.客户端需要什么类型，服务端能产出什么类型
+        6.进行内容协商的最佳匹配
+        7.用支持将对象转为最佳匹配媒体类型的converter。调用它进行转换
+
+
+
+模板引擎thymeleaf基本用法
+1.引入
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>

@@ -1,0 +1,16 @@
+
+spring:
+  # 改变静态资源文件夹位置
+  web:
+    resources:
+      static-locations: [classpath:/gnar/]
+  # 配置静态资源访问前缀
+  mvc:
+    static-path-pattern: /res/**
+    # 允许网页支持rest风格
+    hiddenmethod:
+      filter:
+        enabled: true
+    #开启参数内容协商  format=响应格式 如 ?format=json
+    contentnegotiation:
+      favor-parameter: true
