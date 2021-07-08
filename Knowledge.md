@@ -52,6 +52,42 @@ public class HelloworldApplication {
 
   - @EnableAutoConfiguration：自动配置
     - @AutoConfigurationPackage：自动配置包
-      - @Import({Registrar.class}) 
-    - @Import({AutoConfigurationImportSelector.class})
+      - @Import({Registrar.class})：自动配置‘包注册’
+    - @Import({AutoConfigurationImportSelector.class})：自动配置导入选择  
+
   - @ComponentScan：
+
+
+获取所有的配置
+```java
+List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
+```
+
+获取候选的配置
+```java
+protected List<String> getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) {
+		List<String> configurations = SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),
+				getBeanClassLoader());
+		Assert.notEmpty(configurations, "No auto configuration classes found in META-INF/spring.factories. If you "
+				+ "are using a custom packaging, make sure that file is correct.");
+		return configurations;
+	}
+```
+
+自动配置的核心文件：MATA-INF/spring.factories  
+spring-boot-autoconfigure-2.5.2.jar/META-INF/spring.factories  
+
+**结论**  
+springboot所有自动配置都是在启动的时候扫描并加载：  
+\META-INF\spring.factories 所有的自动配置类都在这里面，但是不一定生效。要判断条件是否成立，只有导入了对应的starter，对应的配置才会生效
+
+
+1. springboot在启动的时候，从类路径下/META-INF/spring.factories 获取指定的配置类;
+2. 将这些自动配置类导入容器，自动配置类就会生效，帮我们进行自动配置
+3. 以前我们需要自动配置的东西，springboot帮我们做了
+4. 整合javaEE，解决方案和自动配置的东西都在pring-boot-autoconfigure-2.5.2.jar下
+5. 他会把所有需要导入的组件，以类名的方式返回，这些组件就会添加到容器
+6. 容器中也会存在很多xxxAutoConfiguration的文件，就是这些配置类给容器中导入了这个场景需要的所有组件
+
+
+
