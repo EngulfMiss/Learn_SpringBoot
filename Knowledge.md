@@ -109,6 +109,8 @@ server.port=8082
 - application.yaml/yml
   - 语法格式：key:空格value
 ```yaml
+# 对空格非常严格
+# 能将属性注入到配置类中
 server:
 # 普通的key，value
   port: 8081
@@ -128,4 +130,59 @@ pets:
 
 # 数组(行内写法)
 animals: [cat,dog,pig]
+```
+
+**yaml可以直接给实体类赋值**
+假设有实体类Person
+```java
+@Component
+@ConfigurationProperties(prefix = "oneperson")
+public class Person {
+    private String name;
+    private int age;
+    private Boolean isHappy;
+    private Date birthday;
+    private Map<String,Object> maps;
+    private List<Object> list;
+    private Dog dog;
+	......
+}
+```
+
+通过yaml配置文件为实体类赋值
+```yaml
+oneperson:
+  name: QSJ
+  age: 23
+  happy: false
+  birthday: 1998/12/24
+  maps: {k1: v1,k2: v2}
+  list:
+    - code
+    - music
+    - game
+  dog:
+    name: 旺旺
+    age: 3
+```
+
+**注意事项**
+1. 使用@ConfigurationProperties(prefix = "yaml配置文件中的keyName")
+2. 使用@ConfigurationProperties报红解决方案，在pom.xml中添加
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-configuration-processor</artifactId>
+    <optional>true</optional>
+</dependency>
+```
+3. yaml中key的名字对应的是实体类的属性名称  
+实体类的属性名是  getter/setter去掉get/set后的单词首字母小写形式  
+例如：  
+```java
+private Boolean isHappy;  
+public void setHappy(Boolean happy) {
+	isHappy = happy;
+}  
+//属性名为 happy而不是isHappy
 ```
