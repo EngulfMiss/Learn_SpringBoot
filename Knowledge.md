@@ -89,5 +89,43 @@ springboot所有自动配置都是在启动的时候扫描并加载：
 5. 他会把所有需要导入的组件，以类名的方式返回，这些组件就会添加到容器
 6. 容器中也会存在很多xxxAutoConfiguration的文件，就是这些配置类给容器中导入了这个场景需要的所有组件
 
+____
+## SpringApplication 类
+这个类主要做了四件事情  
+1. 推断应用的类型是普通项目还是web项目
+2. 查找并加载所有可用初始化器，设置到initializers属性中
+3. 找出所有的应用程序监听器，设置到listeners属性中
+4. 推断并设置main方法的定义类，找到运行的主类
 
 
+# springboot配置
+**springboot使用全局的配置文件，配置文件的名称是固定的**
+- application.properties
+  - 语法格式：key=value
+```properties
+server.port=8082
+```
+
+- application.yaml/yml
+  - 语法格式：key:空格value
+```yaml
+server:
+# 普通的key，value
+  port: 8081
+# 对象
+champion:
+  name: kindred
+  age: 1500
+
+# 对象(行内写法)
+student: {name: kindred,age: 1500}
+
+# 数组
+pets:
+  - cat
+  - dog
+  - bird
+
+# 数组(行内写法)
+animals: [cat,dog,pig]
+```
