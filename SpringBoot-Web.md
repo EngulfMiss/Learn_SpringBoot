@@ -65,6 +65,9 @@ public String[] getStaticLocations() {
 resource > static(默认) > public
 _____
 
+
+_____
+
 ### 首页和图标定制  
 首页:默认会去静态资源目录找index.html  
 ```java
@@ -107,3 +110,32 @@ private Resource getWelcomePage() {
 ```html
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 ```
+_____
+## 模板引擎
+引入依赖
+```xml
+<!-- Thymeleaf -->
+<dependency>
+    <groupId>org.thymeleaf</groupId>
+    <artifactId>thymeleaf-spring5</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-java8time</artifactId>
+</dependency>
+```
+或者直接导入thymeleaf启动器
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+使用thymeleaf  
+1. 导入约束  
+```html
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+```
+2. thymeleaf语法
+
