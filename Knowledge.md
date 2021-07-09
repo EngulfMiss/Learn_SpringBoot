@@ -89,6 +89,14 @@ springboot所有自动配置都是在启动的时候扫描并加载：
 5. 他会把所有需要导入的组件，以类名的方式返回，这些组件就会添加到容器
 6. 容器中也会存在很多xxxAutoConfiguration的文件，就是这些配置类给容器中导入了这个场景需要的所有组件
 
+**自动配置再理解**   
+以HttpEncodingAutoConfiguration为例  
+@Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(ServerProperties.class)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(CharacterEncodingFilter.class)
+@ConditionalOnProperty(prefix = "server.servlet.encoding", value = "enabled", matchIfMissing = true)
+
 ____
 ## SpringApplication 类
 这个类主要做了四件事情  
