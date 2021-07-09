@@ -92,8 +92,13 @@ springboot所有自动配置都是在启动的时候扫描并加载：
 **自动配置再理解**   
 以HttpEncodingAutoConfiguration为例  
 ```java
+//声明这是一个配置类
 @Configuration(proxyBeanMethods = false)
+
+//开启配置属性，可以配置的属性来自ServerProperties.class 这里面写了yaml中可以配置的属性
 @EnableConfigurationProperties(ServerProperties.class)
+
+//Spring的底层注解，根据条件判断Bean或者类是否生效
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass(CharacterEncodingFilter.class)
 @ConditionalOnProperty(prefix = "server.servlet.encoding", value = "enabled", matchIfMissing = true)
