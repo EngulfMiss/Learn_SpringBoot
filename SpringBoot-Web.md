@@ -159,3 +159,35 @@ model.addAttribute("champions", Arrays.asList("gnar","kindred"));
 <h3 th:each="champion:${champions}" th:text="${champion}"></h3>
 <h3 th:each="champion:${champions}">[[${champion}]]</h3>
 ```
+
+## 扩展自定义springMVC  
+如果我们要扩展springmvc，官方建议我们这样做  
+写一个类添加@Configuration注解并且实现WebMvcConfigurer接口
+```java
+//如果想自定义一些功能只需要写这个组件然后将这个组件交给springboot管理
+
+@Configuration
+public class MyMvcConfig implements WebMvcConfigurer {
+    //视图跳转
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/engulf").setViewName("test");
+    }
+
+    // public interface ViewResolver 实现了视图解析器接口的类，我们就可以把他看做视图解析器
+
+    //将自定义的视图解析器放入spring容器中
+    @Bean
+    public ViewResolver myViewResolver(){
+        return new MyViewResolver();
+    }
+
+    //自定义一个自己的视图解析器
+    public static class MyViewResolver implements ViewResolver {
+        @Override
+        public View resolveViewName(String s, Locale locale) throws Exception {
+            return null;
+        }
+    }
+}
+```
