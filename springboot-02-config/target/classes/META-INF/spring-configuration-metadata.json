@@ -1,0 +1,48 @@
+{
+  "groups": [
+    {
+      "name": "oneperson",
+      "type": "com.engulf.pojo.Person",
+      "sourceType": "com.engulf.pojo.Person"
+    }
+  ],
+  "properties": [
+    {
+      "name": "oneperson.age",
+      "type": "java.lang.Integer",
+      "sourceType": "com.engulf.pojo.Person",
+      "defaultValue": 0
+    },
+    {
+      "name": "oneperson.birthday",
+      "type": "java.util.Date",
+      "sourceType": "com.engulf.pojo.Person"
+    },
+    {
+      "name": "oneperson.dog",
+      "type": "com.engulf.pojo.Dog",
+      "sourceType": "com.engulf.pojo.Person"
+    },
+    {
+      "name": "oneperson.happy",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.engulf.pojo.Person"
+    },
+    {
+      "name": "oneperson.list",
+      "type": "java.util.List<java.lang.Object>",
+      "sourceType": "com.engulf.pojo.Person"
+    },
+    {
+      "name": "oneperson.maps",
+      "type": "java.util.Map<java.lang.String,java.lang.Object>",
+      "sourceType": "com.engulf.pojo.Person"
+    },
+    {
+      "name": "oneperson.name",
+      "type": "java.lang.String",
+      "sourceType": "com.engulf.pojo.Person"
+    }
+  ],
+  "hints": []
+}

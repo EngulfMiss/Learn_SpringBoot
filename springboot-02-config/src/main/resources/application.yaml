@@ -1,0 +1,30 @@
+# 对空格非常严格
+# 能将属性注入到配置类中
+
+# springboot的多环境配置，选择激活哪一个环境配置
+#spring:
+#  profiles:
+#    active: dev
+
+# 或者可以将所有的环境写在一个配置文件中用 --- 区别 spring.profiles 命名
+server:
+  port: 8080
+spring:
+  profiles:
+    active: test
+
+serve
+---
+server:
+  port: 8081
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+server:
+  port: 8083
+spring:
+  config:
+    activate:
+      on-profile: test
