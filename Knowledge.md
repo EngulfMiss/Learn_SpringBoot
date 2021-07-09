@@ -90,7 +90,10 @@ springboot所有自动配置都是在启动的时候扫描并加载：
 6. 容器中也会存在很多xxxAutoConfiguration的文件，就是这些配置类给容器中导入了这个场景需要的所有组件
 
 **自动配置再理解**   
-以HttpEncodingAutoConfiguration为例  
+
+MATA-INF/spring.factories下的XxxAutoConfiguration  --> @EnableConfigurationProperties(XxxProperties.class) --> @ConfigurationProperties(prefix = "xxx")
+
+以HttpEncodingAutoConfiguration为例    
 ```java
 //声明这是一个配置类
 @Configuration(proxyBeanMethods = false)
