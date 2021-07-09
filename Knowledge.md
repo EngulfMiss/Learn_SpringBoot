@@ -91,6 +91,7 @@ springboot所有自动配置都是在启动的时候扫描并加载：
 
 **自动配置再理解**   
 
+SpringBoot启动会加载大量的自动配置类  
 MATA-INF/spring.factories下的XxxAutoConfiguration  --> @EnableConfigurationProperties(XxxProperties.class) --> @ConfigurationProperties(prefix = "xxx")
 
 以HttpEncodingAutoConfiguration为例    
