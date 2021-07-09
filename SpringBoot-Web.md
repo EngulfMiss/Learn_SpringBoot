@@ -138,4 +138,24 @@ _____
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 ```
 2. thymeleaf语法
+基础文本：  
+```java
+model.addAttribute("msg","<h1>Kindred</h1>");
+```
+```html
+<!--th:text-->
+<div th:text="${msg}">啦啦啊</div>
+<div th:utext="${msg}">啦啦啊</div>
+```
+- th:text:不转义字符串输出结果为：<h1>Kindred</h1>
+- th:utext:转义字符串输出结果为：Kindred带h1标签效果  
 
+普通集合
+```java
+model.addAttribute("champions", Arrays.asList("gnar","kindred"));
+```
+```html
+<!--th:each-->
+<h3 th:each="champion:${champions}" th:text="${champion}"></h3>
+<h3 th:each="champion:${champions}">[[${champion}]]</h3>
+```
