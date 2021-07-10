@@ -286,3 +286,40 @@ public class MyLocaleResolver implements LocaleResolver {
     }
 }
 ```
+
+## 拦截器
+- 自己写一个类实现HandlerInterceptor接口，重写方法，一般就重写preHandle
+```java
+@Component
+public class LoginHandlerInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //登录成功后，应该有用户的session
+        if(request.getSession().getAttribute("LoginUser") != null){
+            return true;
+        }else {
+            request.setAttribute("errorMsg","请先登录");
+            request.getRequestDispatcher("/login").forward(request,response);
+            return false;
+        }
+    }
+}
+```
+
+- 注册自己创建的拦截器，实现WebConfigurer接口
+```java
+@Configuration
+public class MyMvcConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private LoginHandlerInterceptor loginHandlerInterceptor;
+
+
+    //添加自定义拦截器
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginHandlerInterceptor).addPathPatterns("/**")
+                .excludePathPatterns("/login","/","/index","/index.html","css/**","js/**","/images/**","/fonts/**");
+    }
+}
+```
