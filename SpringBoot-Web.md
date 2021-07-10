@@ -192,3 +192,79 @@ public class MyMvcConfig implements WebMvcConfigurer {
     }
 }
 ```
+
+## web项目
+1. 首页实现  
+如果首页想使用thymeleaf模板，一定要注意给自己的html页面添加  
+```html
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+```  
+并且推荐里面的资源路径使用thymeleaf推荐的@{}形式
+```html
+<script th:src="@{js/jquery-1.10.2.min.js}"></script>
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script th:src="@{js/modernizr.min.js}"></script>
+```
+
+**国际化**
+写三个(一个基础，两个语言)配置文件  
+- login.properties
+- login_en_US.properties
+- login_zh_CN.properties
+
+IDEA自动帮我们创建了一个Resource Bundle 'login'  
+
+然后在springboot配置文件中声明国际化配置文件的位置
+```properties
+# 我们的国际化配置文件的真实位置
+spring.messages.basename=i18n.login
+```
+
+在thymeleaf页面中使用#{}的方式获取国际化内容
+```html
+<input type="text" class="form-control" th:placeholder="#{login.username}" autofocus>
+<input type="password" class="form-control" th:placeholder="#{login.password}">
+```
+
+并在页面中添加两个语言切换的链接
+```html
+<!-- 跳转的页面要有对应的controller处理
+	l='zh_CN'，l 是参数 可以写其他的
+-->
+<a class="btn btn-sm" th:href="@{/login(l='zh_CN')}">中文</a>
+<a class="btn btn-sm" th:href="@{/login(l='en_US')}">English</a>
+```
+
+编写一个自定义的国际化解析器(实现LocaleResolver接口)  
+**注意**  
+- SpringMVC中约定国际化解析器的Bean名称必须是localeResolver
+- SpringMVC中约定国际化解析器的Bean名称必须是localeResolver
+- SpringMVC中约定国际化解析器的Bean名称必须是localeResolver
+- 我们自定义的国际化组件一定要放到spring容器中
+```java
+@Component("localeResolver")
+public class MyLocaleResolver implements LocaleResolver {
+
+    //解析请求
+    @Override
+    public Locale resolveLocale(HttpServletRequest httpServletRequest) {
+        //获取请求中的参数
+        String language = httpServletRequest.getParameter("l");
+        Locale locale = Locale.getDefault();  //如果没有使用默认的
+
+        //判断请求是否携带了国际化参数
+        if(!StringUtils.isEmpty(language)){
+            //zh_CN
+            String[] s = language.split("_");
+            //通过_分隔为国家和地区
+            locale = new Locale(s[0], s[1]);
+        }
+        return locale;
+    }
+
+    @Override
+    public void setLocale(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Locale locale) {
+
+    }
+}
+```
