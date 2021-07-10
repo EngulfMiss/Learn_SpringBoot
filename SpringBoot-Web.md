@@ -133,6 +133,7 @@ _____
 ```
 
 使用thymeleaf  
+**要想springboot识别thymeleaf模板，就要加入下面的约束才可以**  
 1. 导入约束  
 ```html
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
