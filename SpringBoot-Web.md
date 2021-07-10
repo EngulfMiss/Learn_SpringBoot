@@ -148,7 +148,7 @@ model.addAttribute("msg","<h1>Kindred</h1>");
 <div th:text="${msg}">啦啦啊</div>
 <div th:utext="${msg}">啦啦啊</div>
 ```
-- th:text:不转义字符串输出结果为：<h1>Kindred</h1>
+- th:text:不转义字符串输出结果为：&lt;h1&gt;Kindred&lt;/h1&gt;
 - th:utext:转义字符串输出结果为：Kindred带h1标签效果  
 
 普通集合
