@@ -209,8 +209,26 @@ public class MyMvcConfig implements WebMvcConfigurer {
 **国际化**
 写三个(一个基础，两个语言)配置文件  
 - login.properties
+```properties
+login.password=密码
+login.register=去注册
+login.tip=请登录
+login.username=用户名
+```
 - login_en_US.properties
+```properties
+login.password=password
+login.register=Sign Up
+login.tip=Please Sign In
+login.username=username
+```
 - login_zh_CN.properties
+```properties
+login.password=密码
+login.register=去注册
+login.tip=请登录
+login.username=用户名
+```
 
 IDEA自动帮我们创建了一个Resource Bundle 'login'  
 
