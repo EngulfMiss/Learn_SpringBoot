@@ -391,3 +391,23 @@ public class EmployeeController {
 ```properties
 spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
 ```
+
+## thymeleaf的url传递参数
+使用Thymeleaf传递url参数
+- 路径变量
+```html
+<a href="#" th:href="@{/admin/{id}/delete(id=${comment.id})}" >删除</a>
+```
+{xx} 设置参数名，末尾加（xx=） 即可设置路径变量
+
+- url单参数
+```html
+<a th:href="@{/admin(page=${page.number}-1 )}" class=" item">查找</a>
+```
+末尾直接添加name value对，用括号包裹
+
+- url多个参数
+```html
+<a th:href="@{/admin(page=${page.number}-1,size=10)}" class=" item">查找</a>
+```
+多个参数用逗号分隔
