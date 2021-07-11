@@ -323,3 +323,18 @@ public class MyMvcConfig implements WebMvcConfigurer {
     }
 }
 ```
+
+## Thymeleaf公共页面提取
+**两种声明公共页的方式**
+- 使用id
+```html
+<div id="leftmenu" class="left-side sticky-left-side"> //提取公共页面
+
+<div th:replace="common :: #leftmenu"></div>  //id公共页使用加#
+```
+- 使用thymeleaf提供的th:fragment提取  
+```html
+<div th:fragment="headermenu" class="header-section"> 
+
+<div th:replace="common :: headermenu"></div>
+```
