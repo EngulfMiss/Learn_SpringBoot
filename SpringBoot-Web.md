@@ -416,3 +416,6 @@ spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
 <a th:href="@{/admin(page=${page.number}-1,size=10)}" class=" item">查找</a>
 ```
 多个参数用逗号分隔
+
+### thymeleaf404错误页面
+- templates文件夹下创建error文件夹，在error文件夹中存放名为404.html页面即可(记得添加 xmlns:th="http://www.thymeleaf.org")
