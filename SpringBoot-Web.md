@@ -386,3 +386,8 @@ public class EmployeeController {
 	</tr>
 </tbody>
 ```
+
+**日期格式化**
+```properties
+spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
+```
