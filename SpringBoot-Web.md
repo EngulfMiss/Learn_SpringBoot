@@ -400,6 +400,11 @@ spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
 ```
 {xx} 设置参数名，末尾加（xx=） 即可设置路径变量
 
+- 路径变量(多参数)
+```html
+<a th:href="@{/toDelEmploy/{eid}/{uid}(eid=${employee.getId()},uid=${employee.getGender()})}">删除</a>
+```
+
 - url单参数
 ```html
 <a th:href="@{/admin(page=${page.number}-1 )}" class=" item">查找</a>
