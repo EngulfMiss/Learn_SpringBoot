@@ -325,16 +325,64 @@ public class MyMvcConfig implements WebMvcConfigurer {
 ```
 
 ## Thymeleaf公共页面提取
-**两种声明公共页的方式**
+**两种声明公共页的方式 使用~{}**
 - 使用id
 ```html
 <div id="leftmenu" class="left-side sticky-left-side"> //提取公共页面
-
+//使用
 <div th:replace="common :: #leftmenu"></div>  //id公共页使用加#
 ```
 - 使用thymeleaf提供的th:fragment提取  
 ```html
 <div th:fragment="headermenu" class="header-section"> 
+//使用
+<div th:replace="~{common :: headermenu}"></div>
+```
 
-<div th:replace="common :: headermenu"></div>
+实现点击标签高亮的一个思路  
+在跳转页面的时候传递一个参数用来判断当前页面  
+使用三元运算符判断高亮是否开启  
+
+
+## 表单数据遍历案例(伪数据库实现)
+- 创建实体类Employee
+```java
+@Data
+public class Employee {
+    private Integer id;
+    private String Ename;
+    private String email;
+    private Integer gender;
+
+    private Department department;
+    private Date birth;
+}
+```
+- 控制器处理请求，返回数据给前端
+```java
+@Controller
+public class EmployeeController {
+    @Autowired
+    private EmpolyeeDao empolyeeDao;
+
+    //查询所有员工信息
+    @GetMapping("/selectAllEmploy")
+    public String selectAllEmploy(Model model){
+        model.addAttribute("employees",empolyeeDao.getAllEmployees());
+        return "dynamic_table";
+    }
+}
+```
+- 前端遍历数据
+```html
+<tbody>
+	<tr class="gradeX" th:each="employee:${employees}">
+	    <td th:text="${employee.getId()}"></td>
+	    <td>[[${employee.getEname()}]]</td>
+	    <td th:text="${employee.getEmail()}"></td>
+	    <td th:text="${employee.getGender()==0?'女':'男'}"></td>
+	    <td th:text="${employee.getDepartment().getDepartmentName()}"></td>
+	    <td th:text="${#dates.format(employee.getBirth(),'yyyy/MM/dd HH:mm')}"></td>
+	</tr>
+</tbody>
 ```
