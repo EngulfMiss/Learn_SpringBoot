@@ -200,3 +200,98 @@ public class DruidConfig {
     }
 }
 ```
+
+## springboot整合mybatis
+- 启动器
+```xml
+<dependency>
+    <groupId>org.mybatis.spring.boot</groupId>
+    <artifactId>mybatis-spring-boot-starter</artifactId>
+    <version>2.2.0</version>
+</dependency>
+```
+
+- 编写连接数据库的配置文件
+```properties
+spring.datasource.username=root
+spring.datasource.password=52snowgnar
+spring.datasource.url=jdbc:mysql://localhost:3306/ssmbuild?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
+- 编写pojo实体类
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Books {
+    private Integer bookID;
+    private String bookName;
+    private Integer bookCounts;
+    private String detail;
+}
+```
+
+- 编写mapper
+    - mapper接口上添加@Mapper  
+      或者
+    - 启动类上添加@MapperScan
+```java
+@Mapper
+@Repository
+public interface BookMapper {
+    //查询所有书籍
+    List<Books> selectBookList();
+
+    //通过id查询书籍
+    Books selectBookById(Integer id);
+
+    //添加书籍
+    int addBook(Books books);
+
+    //修改书籍
+    int updateBook(Books books);
+
+    //删除书籍
+    int delBook(Integer id);
+}
+```
+    
+
+- 编写mapper映射文件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.engulf.mapper.BookMapper">
+    <select id="selectBookList" resultType="com.engulf.pojo.Books">
+        select * from ssmbuild.books
+    </select>
+
+    <select id="selectBookById" resultType="books" parameterType="int">
+        select * from ssmbuild.books where bookID = #{id}
+    </select>
+
+    <insert id="addBook" parameterType="books">
+        insert into ssmbuild.books(bookID, bookName, bookCounts, detail) VALUES (#{bookID},#{bookName},#{bookCounts},#{detail})
+    </insert>
+
+    <update id="updateBook" parameterType="books">
+        update ssmbuild.books set bookName = #{bookName},bookCounts = #{bookCounts},detail = #{detail} where bookID = #{bookID}
+    </update>
+
+    <delete id="delBook" parameterType="int">
+        delete from ssmbuild.books where detail = #{id}
+    </delete>
+</mapper>
+```
+
+- springboot配置文件中整合mybatis
+```xml
+# 整合mybatis
+# 要起别名的包
+mybatis.type-aliases-package=com.engulf.pojo
+# 映射文件位置
+mybatis.mapper-locations=classpath:mybatis/mapper/*.xml
+```
