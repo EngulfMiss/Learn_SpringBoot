@@ -82,10 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 <!--如果登录：用户名 和 注销-->
 <!-- 用户名 -->
 <div sec:authorize="isAuthenticated()">
-    <a class="item" th:href="@{/logout}">
         用户名:<span sec:authentication="name"></span>  <!--登录security成功后可以用这个获取用户名-->
         权限:<span sec:authentication="principal.authorities"></span>  <!--登录security成功后可以用这个获取用户有哪些权限-->
-    </a>
 </div>
 <!--注销-->
 <div sec:authorize="isAuthenticated()">
