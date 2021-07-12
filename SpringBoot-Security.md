@@ -34,9 +34,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/level3/**").hasRole("vip3");
 
         //没有权限默认跳到登录页面
-        http.formLogin();  //开启登录的页面
-        
+        //loginPage登录用的页面
+        //loginProcessingUrl登录认证用的页面
+        //开启登录的页面
+        http.formLogin().loginPage("/toLogin").loginProcessingUrl("/login")
+        .usernameParameter("user").passwordParameter("psw");
+
         http.logout().logoutSuccessUrl("/"); //开启注销功能,注销后跳转首页
+
+//        http.csrf().disable();  //关闭csrf功能，注销失败的原因
+
+
+        //开启记住我功能
+        http.rememberMe();
     }
 
 
@@ -51,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and().withUser("root").password(new BCryptPasswordEncoder().encode("w2snowgnar")).roles("vip1","vip2","vip3")
         .and().withUser("gnar").password(new BCryptPasswordEncoder().encode("w2snowgnar")).roles("vip1","vip2");
     }
-}
 ```
 
 **我们想达到一种效果，对应用户有访问哪些功能的权限就显示哪些模块，而不是全部显示出来**  
@@ -108,9 +117,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 </div>
                 <!--注销-->
                 <div sec:authorize="isAuthenticated()">
-                    <a class="item" th:href="@{/logout}">
-                        <i class="sign-out icon"></i> 注销
-                    </a>
+                    <form class="item" th:action="@{/logout}" th:method="post">
+                        <input type="submit" class="sign-out icon" value="注销">
+                    </form>
                 </div>
                 <!--已登录
                 <a th:href="@{/usr/toUserCenter}">
@@ -182,4 +191,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 </body>
 </html>
+```
+
+**使用自定义登录页面注销时出现404**
+两种解决方案
+- 方法一： 关闭csrf保护
+```java
+@Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //关闭跨域访问，解决注销404问题
+        http.csrf().disable();
+    }
+```
+- 方法二：以post方式提交“注销请求”
+```html
+<!--注销-->
+<div sec:authorize="isAuthenticated()">
+    <form class="item" th:action="@{/logout}" th:method="post">
+        <input type="submit" class="sign-out icon" value="注销">
+    </form>
+</div>
 ```
