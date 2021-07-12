@@ -23,6 +23,7 @@ Spring Security的两个主要目标是“认证”和“授权”(访问控制)
 ```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    //授权
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //首页所有人都可以访问，但是功能页只有对应权限的人可以访问
@@ -34,6 +35,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //没有权限默认跳到登录页面
         http.formLogin();  //开启登录的页面
+    }
+
+
+    //认证
+    //密码编码：There is no PasswordEncoder mapped for the id "null" (密码需要加密)
+    //在Spring Secutiry 5.0+ 新增了很多的加密方法
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //在内存中认证
+        auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
+        .withUser("kindred").password(new BCryptPasswordEncoder().encode("w2snowgnar")).roles("vip2","vip3")
+        .and().withUser("root").password(new BCryptPasswordEncoder().encode("w2snowgnar")).roles("vip1","vip2","vip3")
+        .and().withUser("gnar").password(new BCryptPasswordEncoder().encode("w2snowgnar")).roles("vip1","vip2");
     }
 }
 ```
