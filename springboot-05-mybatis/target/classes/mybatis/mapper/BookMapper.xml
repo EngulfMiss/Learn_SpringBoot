@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.engulf.mapper.BookMapper">
+    <select id="selectBookList" resultType="com.engulf.pojo.Books">
+        select * from ssmbuild.books
+    </select>
+
+    <select id="selectBookById" resultType="books" parameterType="int">
+        select * from ssmbuild.books where bookID = #{id}
+    </select>
+
+    <insert id="addBook" parameterType="books">
+        insert into ssmbuild.books(bookID, bookName, bookCounts, detail) VALUES (#{bookID},#{bookName},#{bookCounts},#{detail})
+    </insert>
+
+    <update id="updateBook" parameterType="books">
+        update ssmbuild.books set bookName = #{bookName},bookCounts = #{bookCounts},detail = #{detail} where bookID = #{bookID}
+    </update>
+
+    <delete id="delBook" parameterType="int">
+        delete from ssmbuild.books where detail = #{id}
+    </delete>
+</mapper>
