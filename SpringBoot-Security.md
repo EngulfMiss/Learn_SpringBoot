@@ -45,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.csrf().disable();  //关闭csrf功能，注销失败的原因
 
 
-        //开启记住我功能
-        http.rememberMe();
+        //开启记住我功能(后面是自定义的接收属性名称)
+        http.rememberMe()/*.rememberMeParameter("remember")*/;
     }
 
 
