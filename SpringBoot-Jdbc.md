@@ -91,3 +91,112 @@ public class JDBCController {
     }
 }
 ```
+
+## Druid数据源
+- 导入依赖
+```xml
+<!-- Druid -->
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid</artifactId>
+    <version>1.2.6</version>
+</dependency>
+```
+
+### Druid后台监控
+- Druid有许多专属配置 有些是监控需要用到的
+```xml
+spring:
+  datasource:
+    username: root
+    password: 52snowgnar
+    url: jdbc:mysql://localhost:3306/ssmbuild?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    # Druid专有配置
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initial-size: 5
+    min-idle: 5
+    max-active: 20
+    # 配置获取连接等待超时的时间
+    max-wait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    time-between-eviction-runs-millis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+#    # 打开PSCache，并且指定每个连接上PSCache的大小
+#    pool-prepared-statements: true
+#    #   配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#    max-pool-prepared-statement-per-connection-size: 20
+    filters: stat,wall,log4j
+    use-global-data-source-stat: true
+#    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#    # 配置监控服务器
+#    stat-view-servlet:
+#      login-username: admin
+#      login-password: 123456
+#      reset-enable: false
+#      url-pattern: /druid/*
+#      # 添加IP白名单
+#      #allow:
+#      # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+#      #deny:
+#    web-stat-filter:
+#      # 添加过滤规则
+#      url-pattern: /*
+#      # 忽略过滤格式
+#      exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+```
+
+- 编写一个Druid配置类(记得交给springboot管理)
+```java
+@Configuration
+public class DruidConfig {
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource druidDataSource(){
+        return new DruidDataSource();
+    }
+
+    //后台监控
+    //因为Springboot内置了servlet容器，所以没有web.xml，替代方法 ServletRegisterBean
+    @Bean
+    public ServletRegistrationBean registrationBean(){
+        //注册后台监控和进入的路径
+        ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+        //账号密码配置
+        HashMap<String,String> map = new HashMap<>();
+
+        //增加登录配置
+        map.put("loginUsername","admin");   //两个key是固定的
+        map.put("loginPassword","123456");
+
+        //允许谁可以访问
+        map.put("allow","");
+
+        //禁止谁访问
+//        map.put("deny","192.231.45.46");
+
+        bean.setInitParameters(map);  //设置初始化参数
+        return bean;
+    }
+
+    // filter
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
+        //过滤哪些请求
+//        filterRegistrationBean.addUrlPatterns("/*");
+        //排除哪些请求
+        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        return filterRegistrationBean;
+    }
+}
+```
