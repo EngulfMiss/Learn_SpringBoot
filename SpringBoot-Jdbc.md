@@ -295,3 +295,24 @@ mybatis.type-aliases-package=com.engulf.pojo
 # 映射文件位置
 mybatis.mapper-locations=classpath:mybatis/mapper/*.xml
 ```
+
+- controller调用
+```java
+@RestController
+public class BookController {
+    @Autowired
+    private BookMapper bookMapper;
+
+    @GetMapping("/books")
+    public List<Books> selectBookList(){
+        List<Books> books = bookMapper.selectBookList();
+        return books;
+    }
+
+    @GetMapping("/books/{id}")
+    public Books selectBookListById(@PathVariable("id") Integer id){
+        Books books = bookMapper.selectBookById(id);
+        return books;
+    }
+}
+```
