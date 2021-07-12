@@ -53,3 +53,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 ```
+
+**我们想达到一种效果，对应用户有访问哪些功能的权限就显示哪些模块，而不是全部显示出来**  
+**可以使用thymeleaf对security的整合实现**  
+- 导入依赖  
+```xml
+<!-- thymeleaf整合security -->
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+</dependency>
+```
+
+- 添加命名空间
+```html
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec=http://www.thymeleaf.org/extras/spring-security>
+```
+
+- 前端代码
+```html
+<!--如果未登录-->
+<div sec:authorize="!isAuthenticated()">
+    <a class="item" th:href="@{/toLogin}">
+        <i class="address card icon"></i> 登录
+    </a>
+</div>
+
+<!--如果登录：用户名 和 注销-->
+<!-- 用户名 -->
+<div sec:authorize="isAuthenticated()">
+    <a class="item" th:href="@{/logout}">
+        用户名:<span sec:authentication="name"></span>  <!--登录security成功后可以用这个获取用户名-->
+        权限:<span sec:authentication="principal.authorities"></span>  <!--登录security成功后可以用这个获取用户有哪些权限-->
+    </a>
+</div>
+<!--注销-->
+<div sec:authorize="isAuthenticated()">
+    <a class="item" th:href="@{/logout}">
+        <i class="sign-out icon"></i> 注销
+    </a>
+</div>
+```
