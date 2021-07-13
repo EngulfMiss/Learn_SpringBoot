@@ -165,6 +165,7 @@ public class Quickstart {
 }
 ```
 
+____
 - 一些核心方法
     - Subject currentUser = SecurityUtils.getSubject();  --- 获取当前的用户对象Subject
     - Session session = currentUser.getSession();  --- 通过当前用户拿到Session
@@ -174,5 +175,80 @@ public class Quickstart {
         - currentUser.hasRole("schwartz")  --- 用户是否有这个角色
         - currentUser.isPermitted("lightsaber:wield")  --- 用户是否有权限
         - currentUser.logout();  --- 注销
+       
+____      
 
 ## SpringBoot集成Shiro
+**Shiro三大核心对象**
+- Subject：用户
+- SecurityManager：管理所有用户
+- Realm：连接数据
+
+____
+- 导入依赖
+```xml
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring-boot-web-starter</artifactId>
+    <version>1.7.1</version>
+</dependency>
+```
+
+- 编写一个realm对象(继承AuthorizingRealm类)
+```java
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+
+public class ChampionRealm extends AuthorizingRealm {
+    //授权
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("执行了==>授权doGetAuthorizationInfo");
+        return null;
+    }
+
+    //认证
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        System.out.println("执行了==>认证doGetAuthenticationInfo");
+        return null;
+    }
+}
+```
+
+- 编写配置类
+**ShiroFilterFactoryBean的beanName一定要叫shiroFilterFactoryBean**
+```java
+@Configuration
+public class ShiroConfig {
+    //3.ShiroFilterFactoryBean
+    @Bean("shiroFilterFactoryBean")
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("getDefaultWebSecurityManager") DefaultWebSecurityManager securityManager){
+        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+        //设置安全管理器
+        bean.setSecurityManager(securityManager);
+        return bean;
+    }
+
+
+    //2.DefaultWebSecurityManager
+    @Bean
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("championRealm") ChampionRealm championRealm){
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        //关联管理realm
+        securityManager.setRealm(championRealm);
+        return securityManager;
+    }
+
+
+    //1.创建realm对象，需要自定义
+    @Bean
+    public ChampionRealm championRealm(){
+        return new ChampionRealm();
+    }
+}
+```
