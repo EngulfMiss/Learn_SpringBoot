@@ -412,3 +412,52 @@ protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authent
         return Info;
     }
 ```
+
+## shiro和thymeleaf整合
+- 导入依赖
+```xml
+<dependency>
+    <groupId>com.github.theborakompanioni</groupId>
+    <artifactId>thymeleaf-extras-shiro</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+- 在shiro的配置类中添加ShiroDialect组件
+```java
+//整合ShiroDialect：用来整合 shiro thymeleaf
+    @Bean
+    public ShiroDialect getShiroDialect(){
+        return new ShiroDialect();
+    }
+```
+
+- 为html页面添加名称空间
+```html
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+```
+
+- shiro整合thymeleaf的样本页面
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1 th:text="${msg}"></h1>
+<hr>
+<div shiro:notAuthenticated="">
+<a th:href="@{/toLogin}">登录</a>
+</div>
+<div shiro:hasPermission="user:add">
+<a th:href="@{/champion/add}">add</a>
+</div>
+<div shiro:hasPermission="user:update">
+<a th:href="@{/champion/update}">update</a>
+</div>
+</body>
+</html>
+```
+
