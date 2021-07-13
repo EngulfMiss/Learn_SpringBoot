@@ -156,9 +156,23 @@ public class Quickstart {
         }
 
         //all done - log out!
+        //注销
         currentUser.logout();
 
+        //结束
         System.exit(0);
     }
 }
 ```
+
+- 一些核心方法
+    - Subject currentUser = SecurityUtils.getSubject();  --- 获取当前的用户对象Subject
+    - Session session = currentUser.getSession();  --- 通过当前用户拿到Session
+    - currentUser.isAuthenticated()  --- 判断当前用户是否被认证
+    - Subject的一些方法
+        - currentUser.getPrincipal()  --- 获取当前用户信息
+        - currentUser.hasRole("schwartz")  --- 用户是否有这个角色
+        - currentUser.isPermitted("lightsaber:wield")  --- 用户是否有权限
+        - currentUser.logout();  --- 注销
+
+## SpringBoot集成Shiro
