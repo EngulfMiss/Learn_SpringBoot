@@ -273,3 +273,81 @@ public class ShiroConfig {
     }
 }
 ```
+
+**认证**
+____
+- 写一个controller负责跳转到登录页面
+```java
+@RequestMapping("/toLogin")
+public String toLogin(){
+    return "login";
+}
+```
+
+- 在配置类中开启登录页(承接上方配置使用)
+```java
+bean.setLoginUrl("/toLogin");  //设置登录请求
+```
+
+- 需要自己写登录页面
+登录页面(将登录信息写入表单，跳转至controller进行shiro的登录验证)
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>登录</h2>
+    <p th:text="${msg}" style="color: red;"></p>
+    <form th:action="@{/login}" method="post">
+        <p>用户名:<input type="text" name="username"></p>
+        <p>密 码:<input type="password" name="password"></p>
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>
+```
+
+- 在controller中获取shiro登录用户信息
+```java
+@RequestMapping("/login")
+public String login(String username,String password,Model model){
+    //获取当前的用户
+    Subject subject = SecurityUtils.getSubject();
+    //封装用户的登录数据
+    UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+    try {
+        subject.login(token);  //执行登录的方法
+        return "redirect:index";
+    }catch (UnknownAccountException uae){
+        model.addAttribute("msg","用户名错误");
+        return "login";
+    }catch (IncorrectCredentialsException ice) { //密码错误
+        model.addAttribute("msg","密码错误");
+        return "login";
+    }
+}
+```
+
+- shiro会自动到realm对象中去认证(认证代码片段)
+```java
+//认证
+@Override
+protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    System.out.println("执行了==>认证doGetAuthenticationInfo");
+
+    // 用户名，密码,数据库中获取
+    String name = "kindred";
+    String password = "52snowgnar";
+
+    UsernamePasswordToken userTaken = (UsernamePasswordToken)authenticationToken;
+    if(!userTaken.getUsername().equals(name)){  //判断用户名是否正确
+        return null;  //return null 就会抛出UnknownAccountException
+    }
+    //密码认证shiro自己完成
+
+    return new SimpleAuthenticationInfo("",password,"");
+}
+```
