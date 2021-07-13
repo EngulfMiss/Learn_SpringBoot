@@ -242,6 +242,12 @@ public class ShiroConfig {
      */
     // public void setFilterChainDefinitionMap(Map<String, String> filterChainDefinitionMap)
     Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+    
+    // 授权操作(访问什么请求需要什么权限)  授权拦截操作要在登录拦截之前
+    //  授权拦截操作要在登录拦截之前
+    //  授权拦截操作要在登录拦截之前
+       filterChainDefinitionMap.put("/champion/add","perms[user:add]");
+    
     //登录拦截
     // filterChainDefinitionMap.put("/champion/add","anon");
     //设置什么请求，怎么访问  例如,请求/champion/add 无需认证就可以访问
