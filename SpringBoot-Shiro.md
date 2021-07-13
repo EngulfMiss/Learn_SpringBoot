@@ -404,7 +404,7 @@ protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authent
         //拿到当前登录的对象
         Subject subject = SecurityUtils.getSubject();
         //获取用户
-        User currentUser = (User)subject.getPrincipal();     /*取的就是下面传过来的user，SimpleAuthenticationInfo(user,user.getPassword(),""); 使得授权和认证关联*/
+        User currentUser = (User)subject.getPrincipal();     /*取的就是从认证处理传过来的user，SimpleAuthenticationInfo(user,user.getPassword(),""); 使得授权和认证关联*/
 
         //设置用户权限
         Info.addStringPermission(currentUser.getPerms());
