@@ -228,11 +228,32 @@ public class ShiroConfig {
     //3.ShiroFilterFactoryBean
     @Bean("shiroFilterFactoryBean")
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("getDefaultWebSecurityManager") DefaultWebSecurityManager securityManager){
-        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-        //设置安全管理器
-        bean.setSecurityManager(securityManager);
-        return bean;
-    }
+    ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+    //设置安全管理器
+    bean.setSecurityManager(securityManager);
+
+    //添加shiro的内置过滤器
+    /*
+        anon：无需认证就可以访问
+        authc：必须认证了才能访问
+        user：必须拥有 记住我 功能才能用
+        perms：拥有对某个资源的权限才能访问
+        role：拥有某个角色权限才能访问
+     */
+    // public void setFilterChainDefinitionMap(Map<String, String> filterChainDefinitionMap)
+    Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+    //登录拦截
+    // filterChainDefinitionMap.put("/champion/add","anon");
+    //设置什么请求，怎么访问  例如,请求/champion/add 无需认证就可以访问
+//        filterChainDefinitionMap.put("/champion/add","authc");
+//        filterChainDefinitionMap.put("/champion/update","authc");
+    filterChainDefinitionMap.put("/champion/*","authc");
+    bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+    //设置登录请求
+    bean.setLoginUrl("/toLogin");
+
+    return bean;
 
 
     //2.DefaultWebSecurityManager
