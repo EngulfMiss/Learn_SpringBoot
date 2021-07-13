@@ -196,26 +196,55 @@ ____
 
 - 编写一个realm对象(继承AuthorizingRealm类)
 ```java
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import com.engulf.pojo.User;
+import com.engulf.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ChampionRealm extends AuthorizingRealm {
+
+    @Autowired
+    private UserService userService;
+
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("执行了==>授权doGetAuthorizationInfo");
-        return null;
+
+        SimpleAuthorizationInfo Info = new SimpleAuthorizationInfo();
+//        Info.addStringPermission("user:add");
+        //拿到当前登录的对象
+        Subject subject = SecurityUtils.getSubject();
+        //获取用户
+        User currentUser = (User)subject.getPrincipal();     //取的就是下面传过来的user，SimpleAuthenticationInfo(user,user.getPassword(),""); 使得授权和认证关联
+
+        //设置用户权限
+        Info.addStringPermission(currentUser.getPerms());
+
+        return Info;
     }
 
     //认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行了==>认证doGetAuthenticationInfo");
-        return null;
+
+        // 用户名，密码,数据库中获取
+        UsernamePasswordToken userTaken = (UsernamePasswordToken)authenticationToken;
+
+        User user = userService.getUserByName(userTaken.getUsername());
+
+        if(!userTaken.getUsername().equals(user.getUsername())){  //判断用户名是否正确
+            return null;  //return null 就会抛出UnknownAccountException
+        }
+        //密码认证shiro自己完成,并加密
+        return new SimpleAuthenticationInfo(user,user.getPassword(),"");
     }
 }
 ```
@@ -243,10 +272,12 @@ public class ShiroConfig {
     // public void setFilterChainDefinitionMap(Map<String, String> filterChainDefinitionMap)
     Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
     
-    // 授权操作(访问什么请求需要什么权限)  授权拦截操作要在登录拦截之前
     //  授权拦截操作要在登录拦截之前
     //  授权拦截操作要在登录拦截之前
-       filterChainDefinitionMap.put("/champion/add","perms[user:add]");
+    //  授权拦截操作要在登录拦截之前
+    //  授权拦截操作(访问什么请求需要什么权限)，正常情况下，检测出没有权限后跳转到未授权页面
+        filterChainDefinitionMap.put("/champion/add","perms[user:add]");
+        filterChainDefinitionMap.put("/champion/update","perms[user:update]");
     
     //登录拦截
     // filterChainDefinitionMap.put("/champion/add","anon");
@@ -258,6 +289,9 @@ public class ShiroConfig {
 
     //设置登录请求
     bean.setLoginUrl("/toLogin");
+    
+    //设置未授权请求
+    bean.setUnauthorizedUrl("/Unauthorized");
 
     return bean;
 
@@ -354,6 +388,27 @@ protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authent
     }
     //密码认证shiro自己完成
 
-    return new SimpleAuthenticationInfo("",password,"");
+    return new SimpleAuthenticationInfo(user,password,"");
 }
+```
+
+- 登录后访问页面需要对应权限，权限检测
+```java
+    //授权
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("执行了==>授权doGetAuthorizationInfo");
+
+        SimpleAuthorizationInfo Info = new SimpleAuthorizationInfo();
+//        Info.addStringPermission("user:add");
+        //拿到当前登录的对象
+        Subject subject = SecurityUtils.getSubject();
+        //获取用户
+        User currentUser = (User)subject.getPrincipal();     /*取的就是下面传过来的user，SimpleAuthenticationInfo(user,user.getPassword(),""); 使得授权和认证关联*/
+
+        //设置用户权限
+        Info.addStringPermission(currentUser.getPerms());
+
+        return Info;
+    }
 ```
