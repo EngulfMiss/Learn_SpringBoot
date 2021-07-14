@@ -78,3 +78,31 @@ void contextLoads2() throws MessagingException {
     mailSender.send(mimeMessage);
 }
 ```
+- 根据自己的需求可以封装一个简单的工具类
+```java
+/**
+ * @author Engulf迷失
+ * @param htmlSupport 是否支持html解析
+ * @param title 邮件标题
+ * @param text  邮件文本内容
+ * @param formWho 谁发的
+ * @param toWho 发给谁               
+ * @throws MessagingException
+ */
+public void sendMailUtil(Boolean htmlSupport,String title,String text,String formWho,String... toWho) throws MessagingException {
+    //一个复杂邮件
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    //组装~
+    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true,"utf-8");
+    mimeMessageHelper.setSubject(title);
+    mimeMessageHelper.setText(text,htmlSupport);
+
+    //附件
+    mimeMessageHelper.addAttachment("顶风作案.jpg",new File("C:\\Users\\Lenovo\\Desktop\\1.jpg"));
+
+    mimeMessageHelper.setTo(toWho);
+    mimeMessageHelper.setFrom(formWho);
+
+    mailSender.send(mimeMessage);
+}
+```
