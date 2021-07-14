@@ -113,7 +113,7 @@ return new Docket(DocumentationType.SWAGGER_2)
                 .apis(RequestHandlerSelectors.basePackage("com.engulf.swagger.controller"))
                 //paths():过滤路径
                 //ant:什么样的请求才可以被扫描到(请求为/engulf/所有才可以被扫描到，控制器处理的请求中没有/engulf开头的请求，所以什么都扫不到)
-                //.paths(PathSelectors.ant("/engulf/**"))
+                .paths(PathSelectors.ant("/engulf/**"))
                 .build();
 ```
 
