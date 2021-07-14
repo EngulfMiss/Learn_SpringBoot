@@ -118,3 +118,79 @@ return new Docket(DocumentationType.SWAGGER_2)
 ```
 
 ## 配置API文档的分组
+```java
+.groupName("Engulf迷失")
+```
+
+**如何多个分组**  
+- 可以写多个Docket
+```java
+@Bean
+public Docket docket3(){
+    return new Docket(DocumentationType.SWAGGER_2).groupName("Gnar");
+}
+
+@Bean
+public Docket docket2(){
+    return new Docket(DocumentationType.SWAGGER_2).groupName("Kindred");
+}
+```
+
+## 扫描实体类
+- 编写一个pojo类(属性想要被扫描显示，属性要public修饰，private修饰要添加getter)
+```java
+public class Champion {
+    public String username;
+    public String password;
+}
+```
+- 只要我们的接口的返回值中存在实体类，就会被swagger扫描到
+```java
+//只要我们的接口的返回值中存在实体类，就会被swagger扫描到
+@GetMapping("/champion")
+public Champion champion(){
+    return new Champion();
+}
+```
+
+- 为实体类添加注释
+  - @Api(tags = ""): 给控制器类添加注释
+  - @ApiModel(""): 给pojo类添加注释
+  - @ApiModelProperty(""): 给字段添加注释
+  - @ApiOperation(""): 给控制器方法的注释
+
+用法示例如下：  
+
+```java
+@ApiModel("用户实体类")
+public class Champion {
+    @ApiModelProperty("用户名")
+    private String username;
+    @ApiModelProperty("密码")
+    private String password;
+
+    ... ...
+}
+
+
+@Api(tags = "名为Hello的控制器类")
+@RestController
+public class HelloController {
+    @GetMapping(value = "/hello")
+    public String hello(){
+        return "Hello World";
+    }
+
+    //只要我们的接口的返回值中存在实体类，就会被swagger扫描到
+    @GetMapping("/champion")
+    public Champion champion(){
+        return new Champion();
+    }
+
+    @GetMapping("/opt/{name}")
+    @ApiOperation("名为operation的方法")  //给控制器方法的注释
+    public String operation(@PathVariable("name") @ApiParam("用户名") String username){
+        return "Hello" + username;
+    }
+}
+```
