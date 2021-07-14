@@ -48,8 +48,24 @@ public class SwaggerConfig {
 public class SwaggerConfig {
     //配置了Swagger Docket的bean实例
     @Bean
-    public Docket docket(){
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(getApiInfo());
+    public Docket docket(Environment environment){
+
+        //获取项目的环境
+        Profiles profiles = Profiles.of("dev");
+        //通过environment.acceptsProfiles判断是否处于设定的环境中
+        boolean flag = environment.acceptsProfiles(profiles);
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(getApiInfo())
+                .enable(flag)  //是否启用swagger，false就不能使用swagger了
+                .select()
+                //RequestHandlerSelectors:配置要扫描的方式
+                //basePackage:指定要扫描的包
+                .apis(RequestHandlerSelectors.basePackage("com.engulf.swagger.controller"))
+                //paths():过滤路径
+                //ant:什么样的请求才可以被扫描到(请求为/engulf/所有才可以被扫描到，控制器处理的请求中没有/engulf开头的请求，所以什么都扫不到)
+                //.paths(PathSelectors.ant("/engulf/**"))
+                .build();
     }
 
     //配置Swagger信息
@@ -72,3 +88,33 @@ public class SwaggerConfig {
     }
 }
 ```
+## Swagger配置扫描接口
+- Docket.select().apis(RequestHandlerSelectors.basePackage("com.engulf.swagger.controller")).build();
+  - apis方法参数RequestHandlerSelectors:配置要扫描的方式
+    - basePackage:指定要扫描的包
+    - any:扫描全部
+    - none:都不扫描
+    - withClassAnnotation:扫描类上的注解，参数是一个注解的反射对象 Xxx.class
+    - withMethodAnnotation:扫描方法上的注解
+
+  - paths方法参数PathSelectors:配置要扫描的路径
+    - any:任何
+    - none:任何不
+    - regex:正则表达式
+    - ant:路径 例如：PathSelectors.ant("/engulf/**")
+
+```java
+return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(getApiInfo())
+                .enable(flag)  //是否启用swagger，false就不能使用swagger了
+                .select()
+                //RequestHandlerSelectors:配置要扫描的方式
+                //basePackage:指定要扫描的包
+                .apis(RequestHandlerSelectors.basePackage("com.engulf.swagger.controller"))
+                //paths():过滤路径
+                //ant:什么样的请求才可以被扫描到(请求为/engulf/所有才可以被扫描到，控制器处理的请求中没有/engulf开头的请求，所以什么都扫不到)
+                //.paths(PathSelectors.ant("/engulf/**"))
+                .build();
+```
+
+## 配置API文档的分组
