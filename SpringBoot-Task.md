@@ -39,6 +39,7 @@ public class Springboot09TaskApplication {
 - 编写邮件发送代码
 ```java
 @Autowired
+//MailSenderAutoConfiguration中查看源码
 private JavaMailSenderImpl mailSender;
 
 //发送一个简单的邮件
