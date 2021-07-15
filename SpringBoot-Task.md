@@ -170,7 +170,7 @@ ______
 (9)#:用于确定每个月第几个星期几，只能出现在DayofMonth域。例如在4#2，表示某月的第二个星期三。
 ______
 
-cron表达式在线编辑网址：(http://www.bejson.com/othertools/cron/)[http://www.bejson.com/othertools/cron/]
+cron表达式在线编辑网址：[http://www.bejson.com/othertools/cron/](http://www.bejson.com/othertools/cron/)
 
 ______
 常用表达式例子
