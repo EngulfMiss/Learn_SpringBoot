@@ -24,11 +24,14 @@ Apache Dubbo 是一款高性能、轻量级的开源Java RPC框架，它提供�
 - 注册中心(Registry):注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者
 - 监控中心(Monitor):服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心
 
+_____
 **zookeeper注册中心**  
 出现的问题，启动apache-zookeeper-3.7.0\bin\zkServer.cmd闪退  
 复制apache-zookeeper-3.7.0\conf\zoo_sample.cfg  重命名为 zoo.cfg   
+下载地址：[https://zookeeper.apache.org/releases.html#verifying](https://zookeeper.apache.org/releases.html#verifying)
+_____
 
-
+_____
 **dubbo-admin监控管理后台下载**  
 下载地址：[https://github.com/apache/dubbo-admin/tree/master](https://github.com/apache/dubbo-admin/tree/master)
 
@@ -38,3 +41,4 @@ Apache Dubbo 是一款高性能、轻量级的开源Java RPC框架，它提供�
 控制台输入 java -jar dubbo-admin-0.0.1-SNAPSHOT.jar，记得要打开zookeeper  
 进入网址 http://localhost:7001 用户名，密码都为root
 
+_____
