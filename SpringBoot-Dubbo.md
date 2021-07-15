@@ -42,3 +42,46 @@ _____
 进入网址 http://localhost:7001 用户名，密码都为root
 
 _____
+
+## 服务注册发现实战
+- 新建项目，创建两个Model
+- 导入依赖
+```xml
+<!--导入依赖 Dubbo+zookeeper-->
+<!--Dubbo-->
+<dependency>
+    <groupId>org.apache.dubbo</groupId>
+    <artifactId>dubbo-spring-boot-starter</artifactId>
+    <version>2.7.10</version>
+</dependency>
+
+<!--zookeeper-->
+<dependency>
+    <groupId>com.github.sgroschupf</groupId>
+    <artifactId>zkclient</artifactId>
+    <version>0.1</version>
+</dependency>
+<!--日志会冲突-->
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-recipes</artifactId>
+    <version>5.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-framework</artifactId>
+    <version>5.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
+    <version>3.7.0</version>
+    <!-- 排除这个slf4j-log4j12 -->
+    <exclusions>
+        <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
