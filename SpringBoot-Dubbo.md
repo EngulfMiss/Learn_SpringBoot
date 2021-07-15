@@ -52,7 +52,7 @@ _____
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>2.7.7</version>
+            <version>2.7.10</version>
         </dependency>
 
         <!--zookeeper-->
@@ -60,6 +60,12 @@ _____
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
             <version>0.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zookeeper</artifactId>
+                    <groupId>org.apache.zookeeper</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--日志会冲突-->
         <dependency>
@@ -69,18 +75,33 @@ _____
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
             <version>5.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zookeeper</artifactId>
+                    <groupId>org.apache.zookeeper</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.6.0</version>
+            <version>3.7.0</version>
             <!-- 排除这个slf4j-log4j12 -->
             <exclusions>
                 <exclusion>
-                    <artifactId>org.slf4j</artifactId>
-                    <groupId>slf4j-log4j12</groupId>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -112,6 +133,35 @@ dubbo.application.name=provider-service
 dubbo.registry.address=zookeeper://127.0.0.1:2181
 # 哪些服务要被注册
 dubbo.scan.base-packages=com.engulf.service
+
+dubbo.registry.protocol=zookeeper
+
+zookeeper.timeout=40000
 ```
 
 **消费者**
+- 消费者使用@DubboReference来接收远程服务
+```java
+@RestController
+@Component
+public class TestController {
+    @DubboReference(version = "1.0",check = true)
+    TicketService ticketService;
+
+    @RequestMapping("/kindred")
+    public String ticket(){
+        return ticketService.getTicket();
+    }
+}
+```
+
+- 消费者的配置文件
+```properties
+server.port=8082
+# 消费者去哪里拿服务(注册中心)，需要暴露自己的名字
+dubbo.application.name=consumer-service
+# 注册中心的地址
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+
+dubbo.registry.protocol=zookeeper
+```
