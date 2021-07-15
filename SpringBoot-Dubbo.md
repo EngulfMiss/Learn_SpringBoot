@@ -29,5 +29,12 @@ Apache Dubbo 是一款高性能、轻量级的开源Java RPC框架，它提供�
 复制apache-zookeeper-3.7.0\conf\zoo_sample.cfg  重命名为 zoo.cfg   
 
 
-**dubbo-admin下载**  
+**dubbo-admin监控管理后台下载**  
 下载地址：[https://github.com/apache/dubbo-admin/tree/master](https://github.com/apache/dubbo-admin/tree/master)
+
+在dubbo-admin-master/ 目录内使用 cmd   
+输入 mvn clean package -Dmaven.test.skip=true ,将其打成jar包  
+在 dubbo-admin-master\dubbo-admin\target 运行jar包  
+控制台输入 java -jar dubbo-admin-0.0.1-SNAPSHOT.jar，记得要打开zookeeper  
+进入网址 http://localhost:7001 用户名，密码都为root
+
