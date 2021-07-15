@@ -45,7 +45,7 @@ _____
 
 ## 服务注册发现实战
 - 新建项目，创建两个Model
-- 导入依赖
+- 导入依赖(提供者，消费者都要)
 ```xml
 <!--导入依赖 Dubbo+zookeeper-->
 <!--Dubbo-->
@@ -85,3 +85,33 @@ _____
     </exclusions>
 </dependency>
 ```
+**提供者**  
+- 编写服务并提交给注册中心完成注册
+```java
+import com.engulf.service.TicketService;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.stereotype.Component;
+
+//zookeeper：服务注册和发现
+
+@DubboService  //注册
+@Component  //使用了Dubbo后尽量不要使用@Service注解
+public class TicketServiceImpl implements TicketService {
+    @Override
+    public String getTicket() {
+        return "绽灵节门票";
+    }
+}
+```
+- 编写配置文件
+```properties
+server.port=8081
+# 服务应用名字
+dubbo.application.name=provider-service
+# 注册中心地址
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+# 哪些服务要被注册
+dubbo.scan.base-packages=com.engulf.service
+```
+
+**消费者**
